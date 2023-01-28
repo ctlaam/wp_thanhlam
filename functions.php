@@ -134,12 +134,12 @@ if(!function_exists('thanhlam_thumbnail')){
 if(!function_exists('thanhlam_entry_header')){
     function thanhlam_entry_header(){ 
         if(is_single()) :?>
-            <h1><a href="<?php the_permalink(); ?>" title="<?php the_title(); ?>">
+            <h1 class="entry-title"><a href="<?php the_permalink(); ?>" title="<?php the_title(); ?>">
                 <?php the_title(); ?>
                 </a>
             </h1>
         <?php else :?>
-            <h2><a href="<?php the_permalink(); ?>" title="<?php the_title(); ?>">
+            <h2 class="entry-title"><a href="<?php the_permalink(); ?>" title="<?php the_title(); ?>">
                 <?php the_title(); ?>
                 </a>
             </h2>
@@ -150,9 +150,52 @@ if(!function_exists('thanhlam_entry_header')){
 
 // ham thanhlam_entry_meta
 if(!function_exists('thanhlam_entry_meta')){
-    function thanhlam_entry_meta(){
+    function thanhlam_entry_meta(){ ?>
+    <?php if(!is_page()) : ?>
+        <div class="entry-meta">
+            <?php
+            printf(__('<span class="author">Posted by %1$s</span>','thanhlam'),get_the_author());
+            printf(__('<span class="date-published">at %1$s</span>','thanhlam'),get_the_date());
+            printf(__('<span class="category">in %1$s</span>','thanhlam'),get_the_category_list(','));
+            if(comments_open()):
+                echo '<span class="meta-reply">';
+                comments_popup_link(__('Leave a comment','thanhlam'), __('One comment','thanhlam'), __('% commment','thanhlam'), __('Read all comments','thanhlam'));
+                echo '</span>';
+            endif;
+            ?>
+        </div>
+        <?php endif; ?>
 
+    <?php }
+}
+if(!function_exists('thanhlam_entry_content')){
+    function thanhlam_entry_content(){
+        if(!is_single()) {
+            the_excerpt();
+        } else {
+            the_content();
+            $link_pages = array(
+                'before'=> __('<>Page: ','thanhlam'),
+                'after' =>'</p>',
+                'nextpagelink' => __('Next Page','thanhlam'),
+                'previouspagelink' =>__('Previous Page Link', 'thanhlam')
+            );
+            wp_link_pages($link_pages);
+        }
     }
+}
+function thanhlam_readmore(){
+    return '<a class="read-more" href="'. get_permalink(get_the_ID()) .'">'.__('[Read More]','thanhlam').'</a>';
+}
+add_filter('excerpt_more','thanhlam_readmore');
+
+
+function thanhlam_entry_tag(){
+    if(has_tag()) :
+        echo '<div class="entry-tag"></div>';
+        printf(__('Tagged in %1$s','thanhlam'),get_the_tag_list('', ','));
+        echo '</div>';
+    endif;
 }
 
 

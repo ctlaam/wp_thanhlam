@@ -6,6 +6,9 @@
         <?php thanhlam_entry_header(); ?>
         <?php thanhlam_entry_meta(); ?>
     </div>
-    <div class="entry-content"></div>
+    <div class="entry-content">
+        <?php thanhlam_entry_content(); ?>
+        <?php (is_single() ? thanhlam_entry_tag() : '') ?>
+    </div>
 
 </article>
